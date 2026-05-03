@@ -34,8 +34,16 @@
 - [x] **I. 레이어 분리**: 데이터 저장소, 비즈니스 로직, CLI 인터페이스 분리 명시
 - [x] **II. 테스트 우선**: 모든 기능에 명확한 테스트 시나리오 정의 (80% 커버리지 요구)
 - [x] **III. 최소 의존성**: 의존성 수 ≤ 3으로 명시
-- [x] **IV. 단순함 우선**: 기본 CRUD 기능에만 집중, 초기 시스템 선택의 유연성 제공
-- [x] **V. CLI도구 구현**: 100% CLI 집중, JSON 출력 지원
+- [x] **IV. 단순함 우선**: CRUD 기능만 집중, MVP 지향
+- [x] **V. CLI도구 구현**: 100% CLI 기반, JSON 출력 지원
+
+## Clarification Results
+
+- [x] **ID Format**: 숫자 (auto-increment)로 명확히 지정
+- [x] **Default Sorting**: 생성 시간 역순으로 고정
+- [x] **Delete Confirmation**: 확인 프롬프트 기본 동작
+- [x] **Storage Path**: ~/.todo/todos.json로 지정
+- [x] **JSON Output**: --json/-j 옵션으로 지정
 
 ## Validation Results
 
@@ -51,4 +59,4 @@ All checklist items are satisfied. The specification is:
 
 ---
 
-**Version**: 1.0 | **Validated**: 2026-05-03 | **Validator**: Spec Validate Check
+**Version**: 1.1 | **Validated**: 2026-05-03 | **Validator**: Spec Clarify Check
