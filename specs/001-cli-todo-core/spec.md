@@ -5,7 +5,14 @@
 **Status**: Draft  
 **Input**: User description: "cli 기반의 todo 관리 앱을 만들고 싶어요. 사용자: 터미널에서 사용하는 개인 개발자. 주요기능: 1) todo 항목 추가, 제목(필수), 마감일(선택), 우선순위(선택) 2) 전체 목록 조회:완료/미완료/우선순위로 필터링 가능 3) 항목 완료 처리: 항목ID로 완료 표시 4) 항목 삭제 처리: 항목 ID로 삭제"
 
-## User Scenarios & Testing *(mandatory)*
+## Clarifications
+
+### Session 2026-05-03
+- Q: TODO 항목의 고유 ID는 어떤 형식을 사용해야 하는가? (숫자 또는 UUID) → A: 숫자 (auto-increment)
+- Q: list 명령어의 기본 정렬 순서는 무엇인가? (생성 시간 역순 또는 우선순위 순) → A: 생성 시간 역순 (최신 항목 먼저)
+- Q: delete 명령어의 기본 동작은 무엇인가? (항상 확인 프롬프트 또는 --force 옵션 필수) → A: 확인 프롬프트 표시 (안전한 삭제)
+- Q: TODO 데이터 저장 파일의 정확한 경로는 어디인가? → A: ~/.todo/todos.json
+- Q: JSON 출력 옵션의 명령어 형식은 무엇인가? → A: --json 또는 -j 옵션
 
 ### User Story 1 - Add TODO Items with Metadata (Priority: P1)
 
@@ -79,17 +86,17 @@
 - 제목(title)은 필수 정보이며, 1자 이상 256자 이하의 문자열이어야 한다
 - 마감일(due_date)은 ISO 8601 형식(YYYY-MM-DD)의 선택적 정보이다
 - 우선순위(priority)는 'low', 'medium', 'high' 중 하나의 선택적 정보이다 (기본값: 'medium')
-- 각 항목은 고유 ID(숫자 또는 UUID)를 자동으로 할당받는다
+- 각 항목은 고유 ID(숫자, auto-increment)를 자동으로 할당받는다
 - 생성 시간(created_at)은 자동으로 기록된다
 
 ### R2: TODO Item Retrieval
 - 사용자는 `list` 명령어로 모든 TODO 항목을 조회할 수 있다
 - 각 항목 표시에는 ID, 제목, 상태(완료/미완료), 우선순위, 마감일(있는 경우)이 포함된다
-- 기본 정렬 순서는 생성 시간 역순(최신 항목 먼저) 또는 우선순위 순이다
+- 기본 정렬 순서는 생성 시간 역순(최신 항목 먼저)이다
 - `--status=complete|incomplete` 옵션으로 상태별 필터링이 가능하다
 - `--priority=low|medium|high` 옵션으로 우선순위별 필터링이 가능하다
 - 필터는 조합 가능하다 (예: `list --status=incomplete --priority=high`)
-- JSON 출력 옵션 지원으로 자동화 도구와의 통합을 가능하게 한다
+- `--json` 또는 `-j` 옵션으로 JSON 출력 형식을 지원하여 자동화 도구와의 통합을 가능하게 한다
 
 ### R3: TODO Item Status Update
 - 사용자는 `done <ID>` 명령어로 항목의 완료 상태를 전환할 수 있다 (미완료 → 완료 또는 완료 → 미완료)
@@ -104,7 +111,7 @@
 
 ### R5: Data Persistence
 - 모든 TODO 항목은 로컬 파일 시스템에 저장된다 (JSON 형식 권장)
-- 저장 파일 위치는 사용자 홈 디렉토리 또는 앱 설정 디렉토리에 위치한다 (예: `~/.config/todo/` 또는 `~/.todo/`)
+- 저장 파일 위치는 `~/.todo/todos.json`에 위치한다
 - 데이터 손상 시에도 앱이 우아하게 실패하고 명확한 오류 메시지를 제공한다
 
 ### R6: Error Handling
@@ -132,7 +139,7 @@
 ## Key Entities
 
 ### Entity: TodoItem
-- **id** (integer | UUID): 고유 식별자, 자동 생성
+- **id** (integer): 고유 식별자, 자동 증가
 - **title** (string): 항목 제목, 필수, 1-256 자
 - **status** (enum: 'incomplete' | 'complete'): 현재 상태, 기본값 'incomplete'
 - **priority** (enum: 'low' | 'medium' | 'high'): 우선순위, 기본값 'medium'
@@ -162,7 +169,7 @@
 ## Assumptions
 
 1. **사용자 환경**: Python 3.8+ 또는 Go, Node.js 등의 환경 가용 (기술스택 미정이므로 표준 환경 가정)
-2. **파일 시스템 접근**: 사용자의 홈 디렉토리에 쓰기 권한 있음
+2. **파일 시스템 접근**: 사용자의 `~/.todo/` 디렉토리에 쓰기 권한 있음
 3. **싱글 유저**: 앱은 한 번에 한 사용자만 사용하며, 동시성 문제 없음
 4. **로컬 저장소**: 클라우드 동기화, 네트워크 저장소 미지원 (Constitution Principle V)
 5. **기본값 제공**: 우선순위 기본값 'medium', 마감일 없음으로 기본값 제공
