@@ -1,50 +1,67 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# CLI TODO 관리 앱 Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. 레이어 분리
+비즈니스 로직은 사용자 인터페이스와 분리된 독립 레이어에서 구현한다.
+- 모든 기능은 핵심 비즈니스 로직 레이어와 CLI 인터페이스 레이어로 분리 필수
+- 비즈니스 로직은 CLI 프레임워크와 무관하게 독립적으로 테스트 가능해야 함
+- 데이터 저장소(파일 시스템, DB 등)는 추상화 인터페이스로 분리
+- **Rationale**: 이 원칙은 코드 재사용성을 높이고, 향후 다른 인터페이스(GUI, API) 추가 시 기존 로직을 재활용할 수 있게 함
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. 테스트 우선 (NON-NEGOTIABLE)
+테스트 코드가 구현 코드보다 먼저 작성된다. 테스트 없는 구현 코드는 허용하지 않는다.
+- 모든 기능은 Red-Green-Refactor 사이클로 개발: 테스트 작성 → 테스트 실패 확인 → 구현 → 테스트 통과 → 리팩토링
+- 새로운 코드 추가 시 테스트 커버리지는 반드시 80% 이상 유지
+- 테스트 없는 PR은 승인하지 않음
+- **Rationale**: 테스트 우선 접근으로 요구사항이 명확해지고, 버그를 조기에 발견하며, 리팩토링 시 기존 기능을 보호함
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. 최소 의존성
+외부 패키지 설치 전 반드시 필요성을 검토한다. 불필요한 의존성은 추가하지 않는다.
+- 새로운 의존성 추가 전에 표준 라이브러리로 구현 가능성 검토 필수
+- 중복된 기능의 패키지는 선택하지 않음
+- 의존성 추가 시 라이선스, 유지보수 상태, 커뮤니티 규모 검토
+- **Rationale**: 최소한의 의존성은 보안 취약점 노출을 줄이고, 설치 시간을 단축하며, 프로젝트 복잡도를 낮춤
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. 단순함 우선
+지금 당장 필요하지 않은 추상화 레이어는 만들지 않는다. 명확하고 직접적인 구현을 선호한다.
+- YAGNI(You Aren't Gonna Need It) 원칙 준수
+- 과도한 패턴이나 추상화는 피함. 필요해질 때 리팩토링
+- 코드의 명확성과 읽기 쉬움을 추상성보다 우선
+- **Rationale**: 단순한 구현은 버그가 적고, 유지보수가 쉬우며, 새로운 기여자의 진입장벽이 낮음
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. CLI도구 구현
+이 프로젝트는 터미널 CLI 도구를 만든다. REST API 서버, 웹 인터페이스는 이 프로젝트의 범위 밖이다.
+- 모든 기능은 커맨드 라인 인터페이스로만 제공
+- 표준 입출력(stdin/stdout/stderr)을 활용한 텍스트 기반 상호작용
+- JSON 포맷 지원으로 자동화 및 다른 도구와의 통합 가능
+- **Rationale**: CLI 집중으로 프로젝트 범위를 명확하게 하고, 확장성 높은 구조를 유지함
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+## 프로젝트 범위
+이 프로젝트는 **터미널 기반 TODO 관리 도구 개발**에 집중한다.
+- **포함**: 커맨드 라인 인터페이스, 로컬 파일 저장소, 기본적인 CRUD 작업
+- **제외**: REST API 서버, 웹 인터페이스, 데이터베이스 서버, 클라우드 동기화
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
-
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
-
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## 개발 워크플로우
+- **검토 프로세스**: 모든 기능 추가는 PR을 통해 진행
+- **품질 게이트**: PR 머지 전 모든 테스트 통과, 코드 리뷰 승인 필수
+- **버전 관리**: Semantic Versioning (MAJOR.MINOR.PATCH) 준수
+- **커밋 메시지**: 명확한 메시지로 변경사항 설명 (feat:, fix:, docs: 등)
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+이 Constitution은 프로젝트의 최상위 정책이며, 모든 개발 결정과 코드 리뷰는 이 원칙을 기준으로 수행된다.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**원칙 준수 확인**:
+- 모든 PR 리뷰 시 Constitution의 5가지 핵심 원칙 준수 여부 검증
+- 기능 추가 시 레이어 분리, 테스트, 의존성, 단순함 측면에서 검토
+- CLI 전용 구현 여부 확인
+
+**Amendment 절차**:
+- Constitution 변경은 팀 논의를 거쳐야 함
+- 변경 시 버전 업그레이드 (MAJOR.MINOR.PATCH)
+  - **MAJOR**: 기존 원칙의 철폐 또는 근본적 변경
+  - **MINOR**: 새로운 원칙 추가 또는 기존 원칙 확대
+  - **PATCH**: 명확화, 오타 수정 등 표현상 개선
+
+**Version**: 1.0.0 | **Ratified**: 2026-05-03 | **Last Amended**: 2026-05-03
