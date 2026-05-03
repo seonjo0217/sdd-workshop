@@ -9,9 +9,13 @@ wheels/
 # Virtual environments
 .venv/
 d01/
+d02/
 .env
 __pycache__/
 node_modules/
 .vscode/
 .DS_Store
 Thumbs.db
+.python-version
+pyproject.toml
+uv.lock
